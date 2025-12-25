@@ -147,7 +147,9 @@ export function EmailStageDialog({
             <Text>{t.emailStage.checkEmail({ email: emailTokenState.data.email })}</Text>
 
             {errorCode && (
-              <Text style={{ color: color.Critical.Main }}>{t.emailStage.error({ code: errorCode, error })}</Text>
+              <Text style={{ color: color.Critical.Main }}>
+                {t.emailStage.error({ code: errorCode, error })}
+              </Text>
             )}
           </Box>
           <Button variant="Primary" onClick={() => handleSubmit(emailTokenState.data.result.sid)}>
