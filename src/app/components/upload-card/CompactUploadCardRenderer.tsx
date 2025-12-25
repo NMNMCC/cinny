@@ -6,6 +6,7 @@ import { useMatrixClient } from '../../hooks/useMatrixClient';
 import { TUploadContent } from '../../utils/matrix';
 import { bytesToSize, getFileTypeIcon } from '../../utils/common';
 import { useMediaConfig } from '../../hooks/useMediaConfig';
+import { useTranslation } from '../../internationalization';
 
 type CompactUploadCardRendererProps = {
   isEncrypted?: boolean;
@@ -26,6 +27,7 @@ export function CompactUploadCardRenderer({
   const { upload, startUpload, cancelUpload } = useBindUploadAtom(mx, uploadAtom, isEncrypted);
   const { file } = upload;
   const fileSizeExceeded = file.size >= allowSize;
+  const [t] = useTranslation();
 
   if (upload.status === UploadStatus.Idle && !fileSizeExceeded) {
     startUpload();
@@ -54,12 +56,12 @@ export function CompactUploadCardRenderer({
             <Chip
               as="button"
               onClick={startUpload}
-              aria-label="Retry Upload"
+              aria-label={t.uploadCard.retry}
               variant="Critical"
               radii="Pill"
               outlined
             >
-              <Text size="B300">Retry</Text>
+              <Text size="B300">{t.uploadCard.retry}</Text>
             </Chip>
           )}
           <IconButton

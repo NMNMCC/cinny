@@ -1,4 +1,5 @@
 import React, { useEffect, useCallback, FormEventHandler } from 'react';
+import { useTranslation } from '../../internationalization';
 import { Dialog, Text, Box, Button, config, Input, color, Spinner } from 'folds';
 import { AuthType, MatrixError } from 'matrix-js-sdk';
 import { StageComponentProps } from './types';
@@ -18,6 +19,7 @@ function EmailErrorDialog({
   onRetry: (email: string) => void;
   onCancel: () => void;
 }) {
+  const [t] = useTranslation();
   const handleFormSubmit: FormEventHandler<HTMLFormElement> = (evt) => {
     evt.preventDefault();
     const { retryEmailInput } = evt.target as HTMLFormElement & {
@@ -40,7 +42,7 @@ function EmailErrorDialog({
           <Text size="H4">{title}</Text>
           <Text>{message}</Text>
           <Text as="label" size="L400" style={{ paddingTop: config.space.S400 }}>
-            Email
+            {t.emailStage.emailLabel}
           </Text>
           <Input
             name="retryEmailInput"
@@ -53,12 +55,12 @@ function EmailErrorDialog({
         </Box>
         <Button variant="Primary" type="submit">
           <Text as="span" size="B400">
-            Send Verification Email
+            {t.emailStage.sendVerification}
           </Text>
         </Button>
         <Button variant="Critical" fill="None" outlined type="button" onClick={onCancel}>
           <Text as="span" size="B400">
-            Cancel
+            {t.emailStage.cancel}
           </Text>
         </Button>
       </Box>
@@ -81,6 +83,7 @@ export function EmailStageDialog({
   requestEmailToken: RequestEmailTokenCallback;
 }) {
   const { errorCode, error, session } = stageData;
+  const [t] = useTranslation();
 
   const handleSubmit = useCallback(
     (sessionId: string) => {
@@ -115,7 +118,7 @@ export function EmailStageDialog({
     return (
       <Box direction="Column" alignItems="Center" gap="400">
         <Spinner variant="Secondary" size="600" />
-        <Text style={{ color: color.Secondary.Main }}>Sending verification email...</Text>
+        <Text style={{ color: color.Secondary.Main }}>{t.emailStage.sending}</Text>
       </Box>
     );
   }
@@ -123,11 +126,11 @@ export function EmailStageDialog({
   if (emailTokenState.status === AsyncStatus.Error) {
     return (
       <EmailErrorDialog
-        title={emailTokenState.error.errcode ?? 'Verify Email'}
+        title={emailTokenState.error.errcode ?? t.emailStage.verifyEmail}
         message={
           emailTokenState.error?.data?.error ??
           emailTokenState.error.message ??
-          'Failed to send verification Email request.'
+          t.emailStage.failedToSend
         }
         onRetry={handleEmailSubmit}
         onCancel={onCancel}
@@ -140,16 +143,16 @@ export function EmailStageDialog({
       <Dialog>
         <Box style={{ padding: config.space.S400 }} direction="Column" gap="400">
           <Box direction="Column" gap="100">
-            <Text size="H4">Verification Request Sent</Text>
-            <Text>{`Please check your email "${emailTokenState.data.email}" and validate before continuing further.`}</Text>
+            <Text size="H4">{t.emailStage.verificationSent}</Text>
+            <Text>{t.emailStage.checkEmail({ email: emailTokenState.data.email })}</Text>
 
             {errorCode && (
-              <Text style={{ color: color.Critical.Main }}>{`${errorCode}: ${error}`}</Text>
+              <Text style={{ color: color.Critical.Main }}>{t.emailStage.error({ code: errorCode, error })}</Text>
             )}
           </Box>
           <Button variant="Primary" onClick={() => handleSubmit(emailTokenState.data.result.sid)}>
             <Text as="span" size="B400">
-              Continue
+              {t.emailStage.continue}
             </Text>
           </Button>
         </Box>
@@ -160,8 +163,8 @@ export function EmailStageDialog({
   if (!email) {
     return (
       <EmailErrorDialog
-        title="Provide Email"
-        message="Please provide email to send verification request."
+        title={t.emailStage.provideEmail}
+        message={t.emailStage.provideEmailMsg}
         onRetry={handleEmailSubmit}
         onCancel={onCancel}
       />

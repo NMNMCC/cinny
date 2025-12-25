@@ -4,6 +4,7 @@ import { AuthType } from 'matrix-js-sdk';
 import { StageComponentProps } from './types';
 import { ErrorCode } from '../../cs-errorcode';
 import { PasswordInput } from '../password-input';
+import { useTranslation } from '../../internationalization';
 
 export function PasswordStage({
   stageData,
@@ -14,6 +15,7 @@ export function PasswordStage({
   userId: string;
 }) {
   const { errorCode, error, session } = stageData;
+  const [t] = useTranslation();
 
   const handleFormSubmit: FormEventHandler<HTMLFormElement> = (evt) => {
     evt.preventDefault();
@@ -43,7 +45,7 @@ export function PasswordStage({
         size="500"
       >
         <Box grow="Yes">
-          <Text size="H4">Account Password</Text>
+          <Text size="H4">{t.passwordStage.title}</Text>
         </Box>
         <IconButton size="300" onClick={onCancel} radii="300">
           <Icon src={Icons.Cross} />
@@ -57,12 +59,9 @@ export function PasswordStage({
         gap="400"
       >
         <Box direction="Column" gap="400">
-          <Text size="T200">
-            To perform this action you need to authenticate yourself by entering you account
-            password.
-          </Text>
+          <Text size="T200">{t.passwordStage.description}</Text>
           <Box direction="Column" gap="100">
-            <Text size="L400">Password</Text>
+            <Text size="L400">{t.passwordStage.passwordLabel}</Text>
             <PasswordInput size="400" name="passwordInput" outlined autoFocus required />
             {errorCode && (
               <Box alignItems="Center" gap="100" style={{ color: color.Critical.Main }}>
@@ -70,8 +69,8 @@ export function PasswordStage({
                 <Text size="T200">
                   <b>
                     {errorCode === ErrorCode.M_FORBIDDEN
-                      ? 'Invalid Password!'
-                      : `${errorCode}: ${error}`}
+                      ? t.passwordStage.invalid
+                      : t.passwordStage.error({ code: errorCode, error })}
                   </b>
                 </Text>
               </Box>
@@ -80,7 +79,7 @@ export function PasswordStage({
         </Box>
         <Button variant="Primary" type="submit">
           <Text as="span" size="B400">
-            Continue
+            {t.passwordStage.continue}
           </Text>
         </Button>
       </Box>

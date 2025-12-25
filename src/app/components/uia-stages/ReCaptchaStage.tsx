@@ -3,6 +3,7 @@ import { Dialog, Text, Box, Button, config } from 'folds';
 import { AuthType } from 'matrix-js-sdk';
 import ReCAPTCHA from 'react-google-recaptcha';
 import { StageComponentProps } from './types';
+import { useTranslation } from '../../internationalization';
 
 function ReCaptchaErrorDialog({
   title,
@@ -13,6 +14,7 @@ function ReCaptchaErrorDialog({
   message: string;
   onCancel: () => void;
 }) {
+  const [t] = useTranslation();
   return (
     <Dialog>
       <Box style={{ padding: config.space.S400 }} direction="Column" gap="400">
@@ -22,7 +24,7 @@ function ReCaptchaErrorDialog({
         </Box>
         <Button variant="Critical" fill="None" outlined onClick={onCancel}>
           <Text as="span" size="B400">
-            Cancel
+            {t.reCaptcha.cancel}
           </Text>
         </Button>
       </Box>
@@ -43,11 +45,12 @@ export function ReCaptchaStageDialog({ stageData, submitAuthDict, onCancel }: St
     });
   };
 
+  const [t] = useTranslation();
   if (typeof publicKey !== 'string' || !session) {
     return (
       <ReCaptchaErrorDialog
-        title="Invalid Data"
-        message="No valid data found to proceed with ReCAPTCHA."
+        title={t.reCaptcha.invalidDataTitle}
+        message={t.reCaptcha.invalidDataMessage}
         onCancel={onCancel}
       />
     );
@@ -56,7 +59,7 @@ export function ReCaptchaStageDialog({ stageData, submitAuthDict, onCancel }: St
   return (
     <Dialog>
       <Box style={{ padding: config.space.S400 }} direction="Column" gap="400">
-        <Text>Please check the box below to proceed.</Text>
+        <Text>{t.reCaptcha.checkBox}</Text>
         <ReCAPTCHA sitekey={publicKey} onChange={handleChange} />
       </Box>
     </Dialog>

@@ -22,6 +22,7 @@ import {
   Text,
 } from 'folds';
 import FocusTrap from 'focus-trap-react';
+import { useTranslation } from '../internationalization';
 import {
   useVerificationRequestPhase,
   useVerificationRequestReceived,

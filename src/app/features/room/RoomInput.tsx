@@ -28,6 +28,7 @@ import {
   config,
   toRem,
 } from 'folds';
+import { useTranslation } from '../../internationalization';
 
 import { useMatrixClient } from '../../hooks/useMatrixClient';
 import {
@@ -162,6 +163,7 @@ export const RoomInput = forwardRef<HTMLDivElement, RoomInputProps>(
 
     const [uploadBoard, setUploadBoard] = useState(true);
     const [selectedFiles, setSelectedFiles] = useAtom(roomIdToUploadItemsAtomFamily(roomId));
+    const [tr] = useTranslation();
     const uploadFamilyObserverAtom = createUploadFamilyObserverAtom(
       roomUploadAtomFamily,
       selectedFiles.map((f) => f.file)
@@ -497,9 +499,9 @@ export const RoomInput = forwardRef<HTMLDivElement, RoomInputProps>(
               >
                 <Icon size="600" src={Icons.File} />
                 <Text size="H4" align="Center">
-                  {`Drop Files in "${room?.name || 'Room'}"`}
+                  {tr.roomInput.dropFilesIn.replace('{room}', room?.name ?? tr.common.loading)}
                 </Text>
-                <Text align="Center">Drag and drop files here or click for selection dialog</Text>
+                <Text align="Center">{t.roomInput.dragDropHint}</Text>
               </Box>
             </Dialog>
           </OverlayCenter>

@@ -17,6 +17,7 @@ import {
   TooltipProvider,
   toRem,
 } from 'folds';
+import { useTranslation } from '../../internationalization';
 import React, { MouseEventHandler, ReactNode, useState } from 'react';
 import { ReactEditor, useSlate } from 'slate-react';
 import {
@@ -296,7 +297,7 @@ export function Toolbar() {
               <MarkButton
                 format={MarkType.Spoiler}
                 icon={Icons.EyeBlind}
-                tooltip={<BtnTooltip text="Spoiler" shortCode={`${modKey} + H`} />}
+                tooltip={<BtnTooltip text={t.uploadCard.spoiler} shortCode={`${modKey} + H`} />}
               />
             </Box>
             <Line variant="SurfaceVariant" direction="Vertical" style={{ height: toRem(12) }} />

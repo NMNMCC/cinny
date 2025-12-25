@@ -21,32 +21,36 @@ export type MembershipFilterItem = {
   filterFn: MembershipFilterFn;
 };
 
-export const useMembershipFilterMenu = (): MembershipFilterItem[] =>
-  useMemo(
+import { useTranslation } from '../internationalization';
+
+export const useMembershipFilterMenu = (): MembershipFilterItem[] => {
+  const [t] = useTranslation();
+  return useMemo(
     () => [
       {
-        name: 'Joined',
+        name: t.membershipFilterMenu.joined,
         filterFn: MembershipFilter.filterJoined,
       },
       {
-        name: 'Invited',
+        name: t.membershipFilterMenu.invited,
         filterFn: MembershipFilter.filterInvited,
       },
       {
-        name: 'Left',
+        name: t.membershipFilterMenu.left,
         filterFn: MembershipFilter.filterLeaved,
       },
       {
-        name: 'Kicked',
+        name: t.membershipFilterMenu.kicked,
         filterFn: MembershipFilter.filterKicked,
       },
       {
-        name: 'Banned',
+        name: t.membershipFilterMenu.banned,
         filterFn: MembershipFilter.filterBanned,
       },
     ],
-    []
+    [t]
   );
+};
 
 export const useMembershipFilter = (
   index: number,

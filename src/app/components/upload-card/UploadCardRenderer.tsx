@@ -1,6 +1,7 @@
 import React, { ReactNode, useEffect } from 'react';
 import { Box, Chip, Icon, IconButton, Icons, Text, color, config, toRem } from 'folds';
 import { UploadCard, UploadCardError, UploadCardProgress } from './UploadCard';
+import { useTranslation } from '../../internationalization';
 import { UploadStatus, UploadSuccess, useBindUploadAtom } from '../../state/upload';
 import { useMatrixClient } from '../../hooks/useMatrixClient';
 import { TUploadContent } from '../../utils/matrix';
@@ -63,6 +64,7 @@ type MediaPreviewProps = {
 function MediaPreview({ fileItem, onSpoiler, children }: MediaPreviewProps) {
   const { originalFile, metadata } = fileItem;
   const fileUrl = useObjectURL(originalFile);
+  const [t] = useTranslation();
 
   return fileUrl ? (
     <Box
@@ -91,7 +93,7 @@ function MediaPreview({ fileItem, onSpoiler, children }: MediaPreviewProps) {
           before={<Icon src={Icons.EyeBlind} size="50" />}
           onClick={() => onSpoiler(!metadata.markedAsSpoiler)}
         >
-          <Text size="B300">Spoiler</Text>
+          <Text size="B300">{t.uploadCard.spoiler}</Text>
         </Chip>
       </Box>
     </Box>
@@ -114,6 +116,7 @@ export function UploadCardRenderer({
 }: UploadCardRendererProps) {
   const mx = useMatrixClient();
   const mediaConfig = useMediaConfig();
+  const [t] = useTranslation();
   const allowSize = mediaConfig['m.upload.size'] || Infinity;
 
   const uploadAtom = roomUploadAtomFamily(fileItem.file);
@@ -151,12 +154,12 @@ export function UploadCardRenderer({
             <Chip
               as="button"
               onClick={startUpload}
-              aria-label="Retry Upload"
+              aria-label={t.uploadCard.retry}
               variant="Critical"
               radii="Pill"
               outlined
             >
-              <Text size="B300">Retry</Text>
+              <Text size="B300">{t.uploadCard.retry}</Text>
             </Chip>
           )}
           <IconButton
